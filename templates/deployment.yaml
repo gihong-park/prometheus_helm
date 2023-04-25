@@ -6,7 +6,17 @@ metadata:
     {{- include "prometheus.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      {{- include "prometheus.selectorLabels" . | nindent 6 }}
   template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "prometheus.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: prometheus-server
       containers:
